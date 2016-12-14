@@ -12,7 +12,17 @@ s.ReadAsyncMode = 'continuous';    %异步通信时，连续读串口数据
 % set(s,'BytesAvailableFcnCount',30);
 % set(s,'BytesAvailableFcnMode','byte');
 fopen(s);
-
+%初始化
+for i=-2:0
+    command=num_choose_command(i);   
+    fwrite(s, command, 'async');         %  发送指令
+    data=fscanf(s);                      %  读取返回信息
+    while isempty(data)                  %  判断返回信息是否为空
+        fwrite(s, command, 'async');     %  如果为空则在发送一次相应的指令
+        data=fscanf(s);                  %  直至成功返回信息
+    end
+    disp(data);                          %  显示返回信息
+end
 while 1                 
 %------------------------------------------------------
 %       脑控采集
@@ -25,29 +35,47 @@ while 1
 %   选指
     command=num_choose_command(num);
 %   传指
-%   fprintf(s, '%s',command);
-%   fprintf(s,command);
-    fwrite(s, command, 'async');
-    
-%   receiveData = fread(s,10)';
-%   接收响应信息
-%     while s.BytesAvailable
-%         fscanf(s)
+    fwrite(s, command, 'async');         %  发送指令
+    data=fscanf(s);                      %  读取返回信息
+    while isempty(data)                  %  判断返回信息是否为空
+        fwrite(s, command, 'async');     %  如果为空则在发送一次相应的指令
+        data=fscanf(s);                  %  直至成功返回信息
+    end
+    disp(data);                          %  显示返回信息
+%---------------------------------------
+%     if num>1
+%        for i=1:3
+%           fwrite(s, command, 'async');
+%           fscanf(s)
+%        end
+%     else
+%           fwrite(s, command, 'async');
+%           fscanf(s)
 %     end
-    fscanf(s)
+%-----------------------------------------
+%   接收响应信息
+%    delay(100);
+%    fscanf(s)
   
 %   n_bytes = get(s,'BytesAvailable');     %数据总数量
 %   if n_bytes      %有效读取 防止Matlab延迟进入或误进入
-%        Data = fread(s, n_bytes, 'uchar')';     % 读走数据并存入Data中 直接为十进制数值形式
+%        Data = fread(s, n_bytes, 'char=>uchar')';     % 读走数据并存入Data中 直接为十进制数值形式
 %   end
 
-   if num==15      %设置停止  跳出循换 
-      stopasync(s);
-      break;
+   if num==5||num==9      %设置停止  跳出循换 
+        command=num_choose_command(13);
+        fwrite(s, command, 'async');
+        data=fscanf(s);
+        while isempty(data)
+            fwrite(s, command, 'async');
+            data=fscanf(s);
+        end
+        disp(data);
+        stopasync(s);
+        break;
    end
 
 end
 fclose(s);
 delete(s);
-% delete(instrfind);  % 清楚所有串口
 
