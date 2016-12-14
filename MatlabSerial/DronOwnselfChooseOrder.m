@@ -1,30 +1,31 @@
 clear,clc;
-delete(instrfind);  % Çå³şËùÓĞ´®¿Ú
-strSerialPortNum = input('´®¿ÚºÅ£¨Êı×Ö£©£º');
+delete(instrfind);  % æ¸…æ¥šæ‰€æœ‰ä¸²å£
+strSerialPortNum = input('ä¸²å£å·ï¼ˆæ•°å­—ï¼‰ï¼š');
 strSerialPortName =sprintf('%s%d','COM',strSerialPortNum);
 s = serial(strSerialPortName);
 %s = serial('com6');
 set(s, 'baudrate', 115200);
-s.Terminator='CR'; %ÉèÖÃÖÕÖ¹·ûÎªCR£¨»Ø³µ·û£©£¬È±Ê¡ÎªLF£¨»»ĞĞ·û£©
-s.Timeout=0.6;   % ÉèÖÃÒ»´Î¶Á»òĞ´²Ù×÷×î´óÍê³ÉÊ±¼äÎª0.6s,È±Ê¡ÖµÎª10s
-s.ReadAsyncMode = 'continuous';    %Òì²½Í¨ĞÅÊ±£¬Á¬Ğø¶Á´®¿ÚÊı¾İ
+s.Terminator='CR'; %è®¾ç½®ç»ˆæ­¢ç¬¦ä¸ºCRï¼ˆå›è½¦ç¬¦ï¼‰ï¼Œç¼ºçœä¸ºLFï¼ˆæ¢è¡Œç¬¦ï¼‰
+s.Timeout=0.6;   % è®¾ç½®ä¸€æ¬¡è¯»æˆ–å†™æ“ä½œæœ€å¤§å®Œæˆæ—¶é—´ä¸º0.6s,ç¼ºçœå€¼ä¸º10s
+s.ReadAsyncMode = 'continuous';    %å¼‚æ­¥é€šä¿¡æ—¶ï¼Œè¿ç»­è¯»ä¸²å£æ•°æ®
 fopen(s);
 % for i=-2:0
 %     command=num_choose_command(i);   
 %     disp_readInfo(s,command);
 % end
 for num = -2:13          
-%   Ñ¡Ö¸
+%   é€‰æŒ‡
     command=num_choose_command(num);
-%   ´«Ö¸
+%   ä¼ æŒ‡
     disp_readInfo(s,command);
-    if num==5||num==9      %ÉèÖÃÍ£Ö¹  Ìø³öÑ­»» 
+    if num==5||num==9      %è®¾ç½®åœæ­¢  è·³å‡ºå¾ªæ¢ 
         command=num_choose_command(13);
         disp_readInfo(s,command);
         stopasync(s);
         break;
     end
-    delay(10000);
+%    delay(10000);
+    pause(2);  % è®¾ç½®å»¶è¿Ÿï¼Œdelay  æ—¶é—´ /s
 end
 fclose(s);
 delete(s);
