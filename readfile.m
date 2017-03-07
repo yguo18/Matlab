@@ -1,5 +1,5 @@
 function caseData = readfile(path)
-    path = 'E:\tmp\HW\ReadFile\case_example\case0.txt';
+    %path = 'E:\tmp\HW\ReadFile\case_example\case0.txt';
     fid = fopen(path,'r');
     caseData.nodEdgUserCount = zeros(1,3);
     b = fgets(fid);
