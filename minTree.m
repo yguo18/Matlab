@@ -85,25 +85,27 @@ while ~(length(nodeRecord)==50)
         end
         b(1,2) = nodeLoadSum(b(1,1)+1,3);
     end
-    for i = 1:size(localNodeArr,1)-1
-        if (localNodeArr(i,1)==b(1,1) && localNodeArr(i,2)==nodeRecord(end)) || (localNodeArr(i,2)==b(1,1) && localNodeArr(i,1)==nodeRecord(end))
-            q = size(maxTreeMatrx,1)+1;
-            maxTreeMatrx(q,:) = localNodeArr(i,:);
-            localNodeArr(i,:)= [];%删除已有边
-        end
-    end
-    % 在nodeArr里也要删除那条边
+     % 在nodeArr里也要删除那条边
     for i = 1:size(nodeArr,1)-1
         if (nodeArr(i,1)==b(1,1) && nodeArr(i,2)==nodeRecord(end)) || (nodeArr(i,2)==b(1,1) && nodeArr(i,1)==nodeRecord(end))
             nodeArr(i,:)= [];%删除已有边
         end
     end
-    if length(nodeRecord)==50
-        break;
-    end
     if any(nodeRecord==b(1,1))
         continue;
     end
+    for i = 1:size(localNodeArr,1)-1
+        if (localNodeArr(i,1)==b(1,1) && localNodeArr(i,2)==nodeRecord(end)) || (localNodeArr(i,2)==b(1,1) && localNodeArr(i,1)==nodeRecord(end))
+            q = size(maxTreeMatrx,1)+1;
+            maxTreeMatrx(q,:) = localNodeArr(i,:);
+            localNodeArr(i,:) = [];%删除已有边
+        end
+    end
+   
+    if length(nodeRecord)==50
+        break;
+    end
+    
     nodeRecord(1,n) = b(1,1);
     n = n + 1;
     % 复制节点 进行从小到大的排序
